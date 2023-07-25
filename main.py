@@ -5,9 +5,10 @@ import uvicorn
 from fastapi import FastAPI, Header
 
 from common import projects
-from dingtalk_bz.dingtalk_client import cal_sign
+from dingtalk_bz.dingtalk_client import cal_sign, push_dingding
 from gitlab_bz.gitlab_client import pipeline_create
 from gitlab_bz.gitlab_hook import pipeline_hook, job_hook
+from model.DIndtalkModel import DingTalkMessage
 
 app = FastAPI()
 logging.getLogger().setLevel(logging.INFO)
@@ -26,7 +27,7 @@ async def webhook(event: Dict[str, Any], X_Gitlab_Event: Union[str, None] = Head
 async def dingtalk_hook(event: Dict[str, Any], sign: Union[str, None] = Header(default=None),
                         timestamp: Union[str, None] = Header(default=None)):
     logging.info(f"event = {event}, sign = {sign}, timestamp = {timestamp}")
-    if sign != cal_sign(timestamp):
+    if sign != cal_sign(timestamp, False):
         logging.error("dingtalk sign error")
         return False
     ci_cd(event)
@@ -38,6 +39,13 @@ def ci_cd(event: Dict[str, Any]):
     sender_id = event['senderStaffId']
     content_arr = content.split(" ")
     project_id = projects.project_dict[content_arr[0]]
+    if project_id is None:
+        logging.error("项目不存在")
+        body = DingTalkMessage()
+        body.msgtype = "text"
+        body.text = "项目不存在"
+        body.at.atUserIds = [sender_id]
+        push_dingding(body)
     projects.pipeline_dict[project_id] = sender_id
     if content_arr[1] == '上线':
         ref = content_arr[2]

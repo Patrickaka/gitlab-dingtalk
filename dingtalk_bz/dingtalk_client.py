@@ -35,12 +35,15 @@ def convert_to_dict(obj):
         return obj
 
 
-def cal_sign(timestamp: str):
+def cal_sign(timestamp: str, encode: bool) -> str:
     secret_enc = secret.encode('utf-8')
     string_to_sign = '{}\n{}'.format(timestamp, secret)
     string_to_sign_enc = string_to_sign.encode('utf-8')
     hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
-    sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+    if encode:
+        sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+    else:
+        sign = base64.b64encode(hmac_code)
     logging.info(f"dingtalk cal_sign = {sign}")
     return sign
 
@@ -48,9 +51,13 @@ def cal_sign(timestamp: str):
 def push_dingding(body: DingTalkMessage):
     headers = {'Content-Type': 'application/json'}
     timestamp = str(round(time.time() * 1000))
-    sign = cal_sign(timestamp)
+    sign = cal_sign(timestamp, True)
     new_push_url = push_url + "&timestamp=" + timestamp + "&sign=" + sign
     body_dict = convert_to_dict(vars(body))
     response = requests.post(new_push_url, data=json.dumps(body_dict), headers=headers)
     print(response)
     return True
+
+
+if __name__ == '__main__':
+    cal_sign('1690265116', False)
