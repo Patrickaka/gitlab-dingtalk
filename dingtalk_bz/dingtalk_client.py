@@ -10,7 +10,7 @@ import requests
 from model.DIndtalkModel import DingTalkMessage
 
 push_url = 'https://oapi.dingtalk.com/robot/send?' \
-           'access_token=bf98a807309d9e1e93e2236ab74efabaff6ac685dd34478c83e4b6d1f0fe938d'
+           'access_token=4e2c88202dd673d7fae086bedcd653069c264b33a3c90423666d8957f6d3ba0d'
 secret = 'byWSibxjgPA4-q6gi9dDOvdGrYfv2xvkLwN9PDxeSJw9sriWzJA7TbbpaqxMA7g_'
 
 
