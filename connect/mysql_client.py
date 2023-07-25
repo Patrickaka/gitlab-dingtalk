@@ -36,7 +36,7 @@ class MysqlClient:
         self.cursor.execute(project_query, update_values)
         self.cnx.commit()
 
-    def find_rollback_ref(self, value) -> str | None:
+    def find_rollback_ref(self, value):
         project_query = "SELECT ci_ref FROM project_ci_log where project_id = %s order by update_time DESC limit 2"
         select_values = (value,)
         self.cursor.execute(project_query, select_values)
