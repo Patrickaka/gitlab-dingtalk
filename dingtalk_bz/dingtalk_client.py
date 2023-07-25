@@ -43,7 +43,7 @@ def cal_sign(timestamp: str, encode: bool) -> str:
     if encode:
         sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
     else:
-        sign = base64.b64encode(hmac_code)
+        sign = base64.b64encode(hmac_code).decode('utf-8')
     logging.info(f"dingtalk cal_sign = {sign}")
     return sign
 
