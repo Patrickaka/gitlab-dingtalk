@@ -4,9 +4,9 @@ import uvicorn
 from fastapi import FastAPI, Header
 
 from common import projects
+from dingtalk_bz.dingtalk_client import cal_sign
 from gitlab_bz.gitlab_client import pipeline_create
 from gitlab_bz.gitlab_hook import pipeline_hook, job_hook
-from dingtalk_bz import dingtalk_client
 
 app = FastAPI()
 
@@ -23,7 +23,7 @@ async def webhook(event: Dict[str, Any], X_Gitlab_Event: Union[str, None] = Head
 @app.post("/dingtalk/webhook")
 async def dingtalk_hook(event: Dict[str, Any], sign: Union[str, None] = Header(default=None),
                         timestamp: Union[str, None] = Header(default=None)):
-    if sign != push_dingding.cal_sign(timestamp):
+    if sign != cal_sign(timestamp):
         return False
     ci_cd(event)
     return True
