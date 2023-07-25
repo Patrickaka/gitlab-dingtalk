@@ -1,0 +1,5 @@
+fastapi==0.100.0
+pydantic==1.10.9
+python_gitlab==3.15.0
+Requests==2.31.0
+uvicorn==0.23.1
