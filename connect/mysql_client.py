@@ -19,7 +19,7 @@ class MysqlClient:
         self.cursor.execute(project_query, select_values)
         return self.cursor.fetchall()
 
-    def find_at_user(self, value) -> int | None:
+    def find_at_user(self, value):
         project_query = "SELECT ci_user_id FROM gitlab_project where project_id = %s"
         select_values = (value,)
         self.cursor.execute(project_query, select_values)
