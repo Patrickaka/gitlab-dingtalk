@@ -7,7 +7,7 @@ from model.DIndtalkModel import DingTalkMessage
 
 
 def init_pipeline(event: Dict[str, Any], mysql_client):
-    content = event['text']['content']
+    content = event['text']['content'].strip()
     sender_id = event['senderStaffId']
     sender_nick = event['senderNick']
     content_arr = content.split(" ")
