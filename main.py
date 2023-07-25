@@ -32,7 +32,7 @@ parser.add_argument(
 )
 args, _ = parser.parse_known_args()
 mysql_host = args.mysql_host or "82.157.239.83"
-mysql_port = args.mysql_host or 3000
+mysql_port = args.mysql_port or 3000
 mysql_user = args.mysql_user or "root"
 mysql_password = args.mysql_password or "JJfkP4bSZ"
 mysql_client = MysqlClient(mysql_host, mysql_port, mysql_user, mysql_password)
