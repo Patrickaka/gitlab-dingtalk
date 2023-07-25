@@ -2,6 +2,7 @@ import base64
 import hashlib
 import hmac
 import json
+import logging
 import time
 import urllib.parse
 
@@ -40,6 +41,7 @@ def cal_sign(timestamp: str):
     string_to_sign_enc = string_to_sign.encode('utf-8')
     hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
     sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+    logging.info(f"dingtalk cal_sign = {sign}")
     return sign
 
 

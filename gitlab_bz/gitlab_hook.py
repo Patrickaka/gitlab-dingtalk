@@ -28,7 +28,7 @@ def job_hook(event: Dict[str, Any]):
     if project_id in projects.pipeline_dict:
         body.at.atUserIds = [projects.pipeline_dict.get(project_id)]
     build_message = ""
-    sub_build_msg = "- **stage**: <br>" + event['build_stage'] + \
+    sub_build_msg = "- **stage**: <br>" + event['build_stage'] + "\n " + \
                     "- **status**: <br>" + event['build_status'] + "\n "
     if event['build_failure_reason'] is not None:
         sub_build_msg += "- **failure_reason**: <br>" + event['build_failure_reason'] + "\n "
