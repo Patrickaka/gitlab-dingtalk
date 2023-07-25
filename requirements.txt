@@ -1,5 +1,9 @@
-fastapi==0.100.0
+fastapi~=0.97.0
+pymysql~=1.1.0
 pydantic==1.10.9
 python_gitlab==3.15.0
 Requests==2.31.0
-uvicorn==0.23.1
+uvicorn~=0.22.0
+
+mysql-connector-python~=8.1.0
+python-gitlab~=3.15.0

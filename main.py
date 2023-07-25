@@ -1,25 +1,49 @@
+import argparse
 import logging
 from typing import Union, Dict, Any
 
 import uvicorn
 from fastapi import FastAPI, Header
 
-from common import projects
-from dingtalk_bz.dingtalk_client import cal_sign, push_dingding
-from gitlab_bz.gitlab_client import pipeline_create
+from cicd.ci import init_pipeline
+from connect.mysql_client import MysqlClient
+from dingtalk_bz.dingtalk_client import cal_sign
 from gitlab_bz.gitlab_hook import pipeline_hook, job_hook
-from model.DIndtalkModel import DingTalkMessage
 
 app = FastAPI()
 logging.getLogger().setLevel(logging.INFO)
+
+parser = argparse.ArgumentParser(description="cicd")
+parser.add_argument(
+    "--mysql_host",
+    type=str,
+)
+parser.add_argument(
+    "--mysql_port",
+    type=int,
+)
+parser.add_argument(
+    "--mysql_user",
+    type=str,
+)
+parser.add_argument(
+    "--mysql_password",
+    type=str,
+)
+args, _ = parser.parse_known_args()
+mysql_host = args.mysql_host or "82.157.239.83"
+mysql_port = args.mysql_host or 3000
+mysql_user = args.mysql_user or "root"
+mysql_password = args.mysql_password or "JJfkP4bSZ"
+mysql_client = MysqlClient(mysql_host, mysql_port, mysql_user, mysql_password)
 
 
 @app.post("/gitlab/webhook")
 async def webhook(event: Dict[str, Any], X_Gitlab_Event: Union[str, None] = Header(default=None)):
     if X_Gitlab_Event == 'Pipeline Hook':
-        pipeline_hook(event)
+        pipeline_hook(event, mysql_client)
     elif X_Gitlab_Event == 'Job Hook':
-        job_hook(event)
+        job_hook(event, mysql_client)
     return True
 
 
@@ -30,28 +54,8 @@ async def dingtalk_hook(event: Dict[str, Any], sign: Union[str, None] = Header(d
     if sign != cal_sign(timestamp, False):
         logging.error("dingtalk sign error")
         return False
-    ci_cd(event)
+    init_pipeline(event, mysql_client)
     return True
-
-
-def ci_cd(event: Dict[str, Any]):
-    content = event['content']
-    sender_id = event['senderStaffId']
-    content_arr = content.split(" ")
-    project_id = projects.project_dict[content_arr[0]]
-    if project_id is None:
-        logging.error("项目不存在")
-        body = DingTalkMessage()
-        body.msgtype = "text"
-        body.text = "项目不存在"
-        body.at.atUserIds = [sender_id]
-        push_dingding(body)
-    projects.pipeline_dict[project_id] = sender_id
-    if content_arr[1] == '上线':
-        ref = content_arr[2]
-        pipeline_create(project_id, False, ref)
-    elif content_arr[1] == '回滚':
-        pipeline_create(project_id, True)
 
 
 def main():
