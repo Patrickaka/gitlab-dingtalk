@@ -1,10 +1,11 @@
 from typing import Dict, Any
 
+from connect import mysql_client
 from model.DIndtalkModel import DingTalkMessage
 from dingtalk_bz.dingtalk_client import push_dingding
 
 
-def pipeline_hook(event: Dict[str, Any], mysql_client):
+def pipeline_hook(event: Dict[str, Any]):
     body = DingTalkMessage()
     body.msgtype = "markdown"
     body.at.atUserIds = mysql_client.find_at_user(event['project']['id'])
@@ -23,7 +24,7 @@ def pipeline_hook(event: Dict[str, Any], mysql_client):
     push_dingding(body)
 
 
-def job_hook(event: Dict[str, Any], mysql_client):
+def job_hook(event: Dict[str, Any]):
     body = DingTalkMessage()
     body.msgtype = "markdown"
     body.markdown.title = event['project_name'] + " " + event['build_name'] + " job"

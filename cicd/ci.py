@@ -1,12 +1,13 @@
 from typing import Dict, Any
 
+from connect import mysql_client
 from connect.mysql_client import MysqlClient
 from dingtalk_bz.dingtalk_client import push_dingding
 from gitlab_bz.gitlab_client import pipeline_create
 from model.DIndtalkModel import DingTalkMessage
 
 
-def parse_event(event: Dict[str, Any], mysql_client):
+def parse_event(event: Dict[str, Any]):
     content = event['text']['content'].strip()
     sender_id = event['senderStaffId']
     sender_nick = event['senderNick']
