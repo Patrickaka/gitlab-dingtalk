@@ -11,12 +11,14 @@ def pipeline_hook(event: Dict[str, Any], mysql_client):
     body.markdown.title = event['project']['name'] + " pipeline"
     build_message = ""
     for build in event['builds']:
-        sub_build_msg = "### stage: " + build['stage'] + "\n" + \
-                        "- **name**: " + build['name'] + "\n " + \
-                        "- **status**: " + build['status'] + "\n "
+        if build['status'] == 'success' or build['failure_reason'] is not None:
+            build_message = "### stage: " + build['stage'] + "\n" + \
+                            "- **name**: " + build['name'] + "\n " + \
+                            "- **status**: " + build['status'] + "\n "
+        else:
+            return
         if build['failure_reason'] is not None:
-            sub_build_msg += "- **failure_reason**: " + build['failure_reason'] + "\n "
-        build_message += sub_build_msg
+            build_message += "- **failure_reason**: " + build['failure_reason'] + "\n "
     body.markdown.text = "### " + event['project']['name'] + " pipeline\n " + build_message
     push_dingding(body)
 

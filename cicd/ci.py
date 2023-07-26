@@ -6,7 +6,7 @@ from gitlab_bz.gitlab_client import pipeline_create
 from model.DIndtalkModel import DingTalkMessage
 
 
-def init_pipeline(event: Dict[str, Any], mysql_client):
+def parse_event(event: Dict[str, Any], mysql_client):
     content = event['text']['content'].strip()
     sender_id = event['senderStaffId']
     sender_nick = event['senderNick']
@@ -18,7 +18,8 @@ def init_pipeline(event: Dict[str, Any], mysql_client):
         solve_error_project(sender_id, mysql_client)
         return
     else:
-        create_pipeline(sender_id, sender_nick, content_arr, mysql_client, projects[0])
+        if content_arr[1] == '上线' or content_arr[1] == '回滚':
+            create_pipeline(sender_id, sender_nick, content_arr, mysql_client, projects[0])
 
 
 def solve_multi_project(projects, sender_id):

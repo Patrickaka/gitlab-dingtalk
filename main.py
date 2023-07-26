@@ -5,7 +5,7 @@ from typing import Union, Dict, Any
 import uvicorn
 from fastapi import FastAPI, Header
 
-from cicd.ci import init_pipeline
+from cicd.ci import parse_event
 from connect.mysql_client import MysqlClient
 from dingtalk_bz.dingtalk_client import cal_sign
 from gitlab_bz.gitlab_hook import pipeline_hook, job_hook
@@ -54,7 +54,7 @@ async def dingtalk_hook(event: Dict[str, Any], sign: Union[str, None] = Header(d
     if sign != cal_sign(timestamp, False):
         logging.error("dingtalk sign error")
         return False
-    init_pipeline(event, mysql_client)
+    parse_event(event, mysql_client)
     return True
 
 

@@ -20,5 +20,16 @@ def pipeline_create(project_id: int, rollback: bool, ref: str = 'master'):
     print(pipeline.asdict())
 
 
+def tag_create(project_id: int, ref: str = 'master'):
+    project = gl.projects.get(project_id)
+    tags = project.tags.list()
+    if tags:
+        last_tag = tags[0].asdict()
+    project.tags.create({
+        'tag_name': "",
+        'ref': ref
+    })
+
+
 if __name__ == '__main__':
-    pipeline_create(13, True, '0721008_lcz')
+    tag_create(13)
