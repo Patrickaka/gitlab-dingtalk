@@ -48,9 +48,9 @@ def create_pipeline(sender_id, senderNick, content_arr, project):
         res = pipeline_create(project[1], False, ref)
     elif content_arr[1] == '回滚':
         ci_type = 2
-        ci_logs = mysql_client.find_rollback_ref(project[1]) or 'master'
+        ci_logs = mysql_client.find_rollback_ref(project[1]) or []
         if len(ci_logs) == 2:
-            ref = ci_logs[0][0] + " -> " + ci_logs[0][0]
+            ref = ci_logs[0][0] + " -> " + ci_logs[1][0]
         elif len(ci_logs) == 1:
             ref = ci_logs[0][0] + " -> unknown"
         else:
