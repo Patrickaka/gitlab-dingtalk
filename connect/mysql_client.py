@@ -14,7 +14,8 @@ class MysqlClient:
         self.cursor = self.cnx.cursor()
 
     def find_project(self, value):
-        project_query = "SELECT id, project_id, project_name, ci_ref FROM gitlab_project where suggest_name like %s"
+        project_query = ("SELECT id, project_id, project_name, ci_ref, project_gitlab_name "
+                         "FROM gitlab_project where suggest_name like %s")
         select_values = ('%' + value + '%',)
         self.cursor.execute(project_query, select_values)
         return self.cursor.fetchall()
@@ -40,11 +41,7 @@ class MysqlClient:
         project_query = "SELECT ci_ref FROM project_ci_log where project_id = %s order by update_time DESC limit 2"
         select_values = (value,)
         self.cursor.execute(project_query, select_values)
-        res = self.cursor.fetchall()
-        if len(res) == 2:
-            return res[1][0]
-        else:
-            return None
+        return self.cursor.fetchall()
 
     def save_project_ci(self, values):
         project_query = "insert into project_ci_log (project_id, ci_type,ci_ref,ci_user_nickname) values " \

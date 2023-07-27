@@ -59,5 +59,13 @@ def push_dingding(body: DingTalkMessage):
     return True
 
 
+def build_text_DingTalkMessage(at_user, content):
+    body = DingTalkMessage()
+    body.msgtype = "text"
+    body.text.content = content
+    body.at.atUserIds = [at_user]
+    return body
+
+
 if __name__ == '__main__':
     cal_sign('1690265116', False)

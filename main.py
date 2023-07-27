@@ -5,9 +5,10 @@ import uvicorn
 from fastapi import FastAPI, Header
 
 from cicd.ci import parse_event
+from common import project_info
 from connect.conn_schedule import scheduler_task
 from dingtalk_bz.dingtalk_client import cal_sign
-from gitlab_bz.gitlab_hook import pipeline_hook, job_hook
+from gitlab_bz.gitlab_hook import job_hook, pipeline_hook_v2
 
 app = FastAPI()
 logging.getLogger().setLevel(logging.INFO)
@@ -16,10 +17,15 @@ logging.getLogger().setLevel(logging.INFO)
 @app.post("/gitlab/webhook")
 async def webhook(event: Dict[str, Any], X_Gitlab_Event: Union[str, None] = Header(default=None)):
     if X_Gitlab_Event == 'Pipeline Hook':
-        pipeline_hook(event)
+        pipeline_hook_v2(event)
     elif X_Gitlab_Event == 'Job Hook':
         job_hook(event)
     return True
+
+
+@app.post("/test")
+async def test():
+    return project_info
 
 
 @app.post("/dingtalk/webhook")

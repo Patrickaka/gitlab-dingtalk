@@ -17,7 +17,7 @@ def pipeline_create(project_id: int, rollback: bool, ref: str = 'master'):
         pipeline = project.pipelines.create({
             'ref': ref
         })
-    print(pipeline.asdict())
+    return pipeline.asdict()
 
 
 def tag_create(project_id: int, ref: str = 'master'):
