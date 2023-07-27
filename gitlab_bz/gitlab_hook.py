@@ -1,6 +1,7 @@
 from typing import Dict, Any
 
 from common import project_info
+from common.project import Pipeline
 from connect import mysql_client
 from model.DIndtalkModel import DingTalkMessage
 from dingtalk_bz.dingtalk_client import push_dingding, build_text_DingTalkMessage
@@ -38,14 +39,16 @@ def pipeline_hook_v2(event: Dict[str, Any]):
         if build['failure_reason'] is not None:
             failure = True
             failure_reason += failure_reason + "\n"
+    ci_type = "回滚" if event['object_attributes']['ref'] == 'dev' else "上线"
     if success:
         content = (f"「{event['project']['description']} - {event['project']['name']}」"
-                   f"上线成功: {event['object_attributes']['ref']}")
+                   f"{ci_type}成功: {event['object_attributes']['ref']}")
         push_dingding(build_text_DingTalkMessage(at_user, content))
     elif failure:
-        pipeline_url = project_info.pipeline_dict.get(event['project']['id'], "")
+        pipeline_url = project_info.pipeline_dict.get(event['project']['id'], Pipeline()).pipeline_url
+        ref = project_info.pipeline_dict.get(event['project']['id'], Pipeline()).ref
         content = (f"「{event['project']['description']} - {event['project']['name']}」"
-                   f"上线失败: {event['object_attributes']['ref']}，状态: {failure_reason}, 详情: {pipeline_url}")
+                   f"{ci_type}失败: {ref}，原因: {failure_reason}, 详情: {pipeline_url}")
         push_dingding(build_text_DingTalkMessage(at_user, content))
 
 

@@ -6,6 +6,7 @@ from fastapi import FastAPI, Header
 
 from cicd.ci import parse_event
 from common import project_info
+from common.project import Pipeline
 from connect.conn_schedule import scheduler_task
 from dingtalk_bz.dingtalk_client import cal_sign
 from gitlab_bz.gitlab_hook import job_hook, pipeline_hook_v2
@@ -25,7 +26,7 @@ async def webhook(event: Dict[str, Any], X_Gitlab_Event: Union[str, None] = Head
 
 @app.post("/test")
 async def test():
-    return project_info
+    return project_info.pipeline_dict.get(13, Pipeline()).pipeline_id
 
 
 @app.post("/dingtalk/webhook")

@@ -55,10 +55,10 @@ def create_pipeline(sender_id, senderNick, content_arr, project):
             ref = ci_logs[0][0] + " -> unknown"
         else:
             ref = "unknown -> unknown"
-        content = f"{project[2]} 回滚开始, ref = {ref}"
+        content = f"「{project[2]} - {project[4]}」开始回滚: {ref}"
         push_dingding(build_text_DingTalkMessage(sender_id, content))
-        res = pipeline_create(project[1], True, ref)
+        res = pipeline_create(project[1], True)
     mysql_client.update_project_ci((sender_id, senderNick, ref, project[1]))
     mysql_client.save_project_ci((project[1], ci_type, ref, senderNick))
     if res:
-        project_info.add_pipeline(res['project_id'], res['id'], res['web_url'])
+        project_info.add_pipeline(res['project_id'], res['id'], res['web_url'], ref)

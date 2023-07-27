@@ -6,7 +6,7 @@ from common import config
 gl = gitlab.Gitlab(config.gitlab_url, config.gitlab_token)
 
 
-def pipeline_create(project_id: int, rollback: bool, ref: str = 'master'):
+def pipeline_create(project_id: int, rollback: bool, ref: str = 'dev'):
     project = gl.projects.get(project_id)
     if rollback:
         pipeline = project.pipelines.create({
@@ -24,7 +24,7 @@ def tag_create(project_id: int, ref: str = 'master'):
     project = gl.projects.get(project_id)
     tags = project.tags.list()
     if tags:
-        last_tag = tags[0].asdict()
+        last_tag = tags.asdict()
     project.tags.create({
         'tag_name': "",
         'ref': ref
