@@ -11,7 +11,7 @@ def parse_event(event: Dict[str, Any]):
     sender_id = event['senderStaffId']
     sender_nick = event['senderNick']
     content_arr = content.split(" ")
-    projects = mysql_client.find_project(content_arr[0])
+    projects = mysql_client.find_project_by_name(content_arr[0])
     if len(projects) > 1:
         solve_multi_project(projects, sender_id)
     elif len(projects) == 0:
@@ -31,7 +31,7 @@ def solve_multi_project(projects, sender_id):
 
 def solve_error_project(sender_id):
     content = "指令不存在 正确格式为 <项目名或简称> <上线/回滚> <分支或者tag名称>\n可用项目: "
-    projects = mysql_client.find_project("")
+    projects = mysql_client.find_project_by_name("")
     for project in projects:
         content += project[2] + " "
     push_dingding(build_text_DingTalkMessage(sender_id, content))
