@@ -7,7 +7,6 @@ from fastapi import FastAPI, Header
 from cicd.ci import parse_event
 from common import project_info
 from common.project import Pipeline
-from connect.conn_schedule import scheduler_task
 from dingtalk_bz.dingtalk_client import cal_sign
 from gitlab_bz.gitlab_hook import job_hook, pipeline_hook_v2
 
@@ -38,12 +37,6 @@ async def dingtalk_hook(event: Dict[str, Any], sign: Union[str, None] = Header(d
         return False
     parse_event(event)
     return True
-
-
-# 定时任务
-@app.on_event('startup')
-async def init_scheduler():
-    scheduler_task()
 
 
 def main():
