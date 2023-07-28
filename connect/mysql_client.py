@@ -35,7 +35,9 @@ class MysqlClient:
                          "FROM gitlab_project where suggest_name like %s")
         select_values = ('%' + value + '%',)
         self.cursor.execute(project_query, select_values)
-        return self.cursor.fetchall()
+        res = self.cursor.fetchall()
+        self.cnx.commit()
+        return res
 
     @_reconnect
     def find_project_by_project_id(self, value):
@@ -44,6 +46,7 @@ class MysqlClient:
         select_values = (value,)
         self.cursor.execute(project_query, select_values)
         res = self.cursor.fetchall()
+        self.cnx.commit()
         if len(res) > 0:
             return res[0]
         else:
@@ -55,6 +58,7 @@ class MysqlClient:
         select_values = (value,)
         self.cursor.execute(project_query, select_values)
         res = self.cursor.fetchall()
+        self.cnx.commit()
         if len(res) > 0:
             return res[0][0]
         else:
@@ -73,7 +77,9 @@ class MysqlClient:
         project_query = "SELECT ci_ref FROM project_ci_log where project_id = %s order by update_time DESC limit 2"
         select_values = (value,)
         self.cursor.execute(project_query, select_values)
-        return self.cursor.fetchall()
+        res = self.cursor.fetchall()
+        self.cnx.commit()
+        return res
 
     @_reconnect
     def save_project_ci(self, values):
