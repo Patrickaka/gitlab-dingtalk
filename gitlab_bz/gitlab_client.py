@@ -1,4 +1,5 @@
 import gitlab
+from gitlab import GitlabGetError
 
 from common import config
 
@@ -21,16 +22,14 @@ def pipeline_create(project_id: int, rollback: bool, ref: str = 'dev'):
     return pipeline.asdict()
 
 
-def tag_create(project_id: int, ref: str = 'master'):
+def tag_validate(project_id: int, ref: str):
     project = gl.projects.get(project_id)
-    tags = project.tags.list()
-    if tags:
-        last_tag = tags.asdict()
-    project.tags.create({
-        'tag_name': "",
-        'ref': ref
-    })
+    try:
+        project.tags.get(ref)
+        return True
+    except GitlabGetError:
+        return False
 
 
 if __name__ == '__main__':
-    tag_create(13)
+    tag_validate(13, "08010012")

@@ -3,7 +3,7 @@ from typing import Dict, Any
 from common import project_info
 from connect import mysql_client
 from dingtalk_bz.dingtalk_client import push_dingding, build_text_DingTalkMessage
-from gitlab_bz.gitlab_client import pipeline_create
+from gitlab_bz.gitlab_client import pipeline_create, tag_validate
 
 
 def parse_event(event: Dict[str, Any]):
@@ -43,9 +43,13 @@ def create_pipeline(sender_id, senderNick, content_arr, project):
     ci_type = 1
     if content_arr[1] == '上线':
         ref = content_arr[2]
-        content = f"「{project[2]} - {project[4]}」开始上线: {ref}"
-        push_dingding(build_text_DingTalkMessage(sender_id, content))
-        res = pipeline_create(project[1], False, ref)
+        if tag_validate(project[1], ref):
+            content = f"「{project[2]} - {project[4]}」开始上线: {ref}"
+            push_dingding(build_text_DingTalkMessage(sender_id, content))
+            res = pipeline_create(project[1], False, ref)
+        else:
+            content = f"{ref}标签不存在，请创建标签"
+            push_dingding(build_text_DingTalkMessage(sender_id, content))
     elif content_arr[1] == '回滚':
         ci_type = 2
         ci_logs = mysql_client.find_rollback_ref(project[1]) or []
