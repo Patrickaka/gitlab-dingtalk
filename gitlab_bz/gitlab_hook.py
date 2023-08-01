@@ -32,18 +32,16 @@ def pipeline_hook_v2(event: Dict[str, Any]):
     if not project:
         logging.error("项目未配置")
         return
-    success = False
+    success = True
     failure = False
     failure_reason = ""
     for build in event['builds']:
-        if build['status'] == 'success':
-            success = True
-        else:
+        if build['status'] != 'success':
             success = False
         if build['failure_reason'] is not None:
             failure = True
             failure_reason += failure_reason + "\n"
-    ci_type = "回滚" if event['object_attributes']['ref'] == 'dev' else "上线"
+    ci_type = "回滚" if event['object_attributes']['tag'] is False else "上线"
     if success:
         content = (f"「{project[2]} - {event['project']['name']}」"
                    f"{ci_type}成功: {event['object_attributes']['ref']}")

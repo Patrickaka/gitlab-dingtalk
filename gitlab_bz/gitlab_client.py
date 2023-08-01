@@ -15,7 +15,8 @@ def pipeline_create(project_id: int, rollback: bool, ref: str = 'dev'):
         })
     else:
         pipeline = project.pipelines.create({
-            'ref': ref
+            'ref': ref,
+            'variables': [{'key': 'ref', 'value': ref}]
         })
     return pipeline.asdict()
 

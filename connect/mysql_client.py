@@ -10,7 +10,7 @@ def _reconnect(func):
             result = func(self, *args, **kwargs)
             return result
         except (mysql.connector.Error, mysql.connector.Warning):
-            self.connect()
+            self.cnx.connect()
             result = func(self, *args, **kwargs)
             return result
 
