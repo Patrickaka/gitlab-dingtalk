@@ -7,6 +7,7 @@ def _reconnect(func):
     @wraps(func)
     def rec(self, *args, **kwargs):
         try:
+            self.cnx.ping(reconnect=True)
             result = func(self, *args, **kwargs)
             return result
         except (mysql.connector.Error, mysql.connector.Warning):

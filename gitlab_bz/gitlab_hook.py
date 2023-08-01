@@ -16,7 +16,7 @@ def pipeline_hook(event: Dict[str, Any]):
     build_message = ""
     for build in event['builds']:
         if build['status'] == 'success' or build['failure_reason'] is not None:
-            build_message += "### stage: " + build['stage'] + "\n" + \
+            build_message += "# ## stage: " + build['stage'] + "\n" + \
                              "- **name**: " + build['name'] + "\n " + \
                              "- **status**: " + build['status'] + "\n "
         else:
