@@ -43,7 +43,7 @@ def pipeline_hook_v2(event: Dict[str, Any]):
             rollback = True
         if build['failure_reason'] is not None:
             failure = True
-            failure_reason += failure_reason + "\n"
+            failure_reason += build['failure_reason'] + "\n"
     ci_type = "回滚" if rollback else "上线"
     if success:
         content = (f"「{project[2]} - {event['project']['name']}」"
@@ -51,8 +51,8 @@ def pipeline_hook_v2(event: Dict[str, Any]):
         push_dingding(build_text_DingTalkMessage(project[5], content))
     elif failure:
         pipeline_url = project_info.pipeline_dict.get(event['project']['id'], Pipeline()).pipeline_url
-        ref = project_info.pipeline_dict.get(event['project']['id'], Pipeline()).ref
-        content = (f"「{project[2]['description']} - {event['project']['name']}」"
+        ref = project_info.pipeline_dict.get(event['project']['id'], Pipeline()).ref or event['object_attributes']['ref']
+        content = (f"「{project[2]} - {event['project']['name']}」"
                    f"{ci_type}失败: {ref}，原因: {failure_reason}, 详情: {pipeline_url}")
         push_dingding(build_text_DingTalkMessage(project[5], content))
 
