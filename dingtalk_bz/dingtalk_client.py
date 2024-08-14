@@ -10,9 +10,8 @@ import requests
 
 from model.DIndtalkModel import DingTalkMessage
 
-push_url = 'https://oapi.dingtalk.com/robot/send?' \
-           'access_token=4e2c88202dd673d7fae086bedcd653069c264b33a3c90423666d8957f6d3ba0d'
-secret = 'byWSibxjgPA4-q6gi9dDOvdGrYfv2xvkLwN9PDxeSJw9sriWzJA7TbbpaqxMA7g_'
+push_url = 'https://oapi.dingtalk.com/robot/send?access_token=6444299f3cdde217968675dec6a3a7ab549955d1e21838fa3fbd819669d120d5'
+secret = 'SEC19251573003011dec937120d4f3f8983975c62acb7a9a5c95e4eae9a7bd5cae4'
 
 
 def convert_to_dict(obj):
@@ -68,4 +67,5 @@ def build_text_DingTalkMessage(at_user, content):
 
 
 if __name__ == '__main__':
-    cal_sign('1690265116', False)
+    body = build_text_DingTalkMessage('', '测试')
+    push_dingding(body)
