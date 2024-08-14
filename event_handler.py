@@ -76,6 +76,6 @@ def main():
 
 if __name__ == '__main__':
     from common import init_log
-
-    init_log.init_log()
     main()
+    init_log.init_log()
+
