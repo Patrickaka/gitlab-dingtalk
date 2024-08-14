@@ -1,10 +1,4 @@
-fastapi~=0.97.0
-pymysql~=1.1.0
-pydantic==1.10.9
-python_gitlab==3.15.0
-Requests==2.31.0
-uvicorn~=0.22.0
-
-mysql-connector-python~=8.1.0
-python-gitlab~=3.15.0
-APScheduler~=3.10.1
+websockets==11.0.2
+requests==2.31.0
+aiohttp==3.10.0
+loguru~=0.7.2

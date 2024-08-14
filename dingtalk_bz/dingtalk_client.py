@@ -1,71 +1,50 @@
-import base64
-import hashlib
-import hmac
 import json
-import logging
-import time
-import urllib.parse
+from datetime import datetime, timedelta
 
 import requests
+from loguru import logger
 
-from model.DIndtalkModel import DingTalkMessage
+from common.config import dz_test_appKey, dz_test_secret, dz_onl_appKey, dz_onl_secret
+from event_handler import is_onl
 
-push_url = 'https://oapi.dingtalk.com/robot/send?access_token=6444299f3cdde217968675dec6a3a7ab549955d1e21838fa3fbd819669d120d5'
-secret = 'SEC19251573003011dec937120d4f3f8983975c62acb7a9a5c95e4eae9a7bd5cae4'
+token_url = 'https://api.dingtalk.com/v1.0/oauth2/accessToken'
+push_url = 'https://api.dingtalk.com/v1.0/robot/groupMessages/send'
+
+access_token = ''
+expire_time = datetime.now()
 
 
-def convert_to_dict(obj):
-    if isinstance(obj, dict):
-        data = {}
-        for key, value in obj.items():
-            data[key] = convert_to_dict(value)
-        return data
-    elif hasattr(obj, "__dict__"):
-        data = {}
-        for key, value in obj.__dict__.items():
-            data[key] = convert_to_dict(value)
-        return data
-    elif isinstance(obj, list):
-        data = []
-        for item in obj:
-            data.append(convert_to_dict(item))
-        return data
+def get_access_token():
+    global access_token, expire_time
+    current_time = datetime.now()
+    if access_token and current_time < expire_time:
+        return access_token
     else:
-        return obj
+        body_param = {
+            "appKey": dz_onl_appKey if is_onl else dz_test_appKey,
+            "appSecret": dz_onl_secret if is_onl else dz_test_secret
+        }
+        response = requests.post(token_url, json=body_param).json()
+        new_time = current_time + timedelta(seconds=response['expireIn'])
+        expire_time = new_time
+        access_token = response['accessToken']
+        return access_token
 
 
-def cal_sign(timestamp: str, encode: bool) -> str:
-    secret_enc = secret.encode('utf-8')
-    string_to_sign = '{}\n{}'.format(timestamp, secret)
-    string_to_sign_enc = string_to_sign.encode('utf-8')
-    hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
-    if encode:
-        sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
-    else:
-        sign = base64.b64encode(hmac_code).decode('utf-8')
-    logging.info(f"dingtalk cal_sign = {sign}")
-    return sign
-
-
-def push_dingding(body: DingTalkMessage):
-    headers = {'Content-Type': 'application/json'}
-    timestamp = str(round(time.time() * 1000))
-    sign = cal_sign(timestamp, True)
-    new_push_url = push_url + "&timestamp=" + timestamp + "&sign=" + sign
-    body_dict = convert_to_dict(vars(body))
-    response = requests.post(new_push_url, data=json.dumps(body_dict), headers=headers)
-    print(response)
+def push_dingding_text(content: str, open_conversation_id: str, robot_code: str):
+    headers = {'x-acs-dingtalk-access-token': get_access_token()}
+    body_param = {
+        "msgParam": json.dumps({
+            "content": content
+        }),
+        "msgKey": "sampleText",
+        "openConversationId": open_conversation_id,
+        "robotCode": robot_code
+    }
+    response = requests.post(push_url, json=body_param, headers=headers).json()
+    logger.info("push_dingding_text: body_param = {}, res = {}", json.dumps(body_param), json.dumps(response))
     return True
 
 
-def build_text_DingTalkMessage(at_user, content):
-    body = DingTalkMessage()
-    body.msgtype = "text"
-    body.text.content = content
-    body.at.atUserIds = [at_user]
-    return body
-
-
 if __name__ == '__main__':
-    body = build_text_DingTalkMessage('', '测试')
-    push_dingding(body)
+    push_dingding_text('hahaha', 'cid3Ecerb4D29JTp+iecXtA8w==', 'dingsbksjfhqhdlsq3pe')
