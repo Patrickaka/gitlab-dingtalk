@@ -28,7 +28,7 @@ async def test():
     mysql_client.cnx.connect()
 
 
-@app.post("/dingtalk/webhook")
+@app.post("/robot/dingtalk/webhook")
 async def dingtalk_hook(event: Dict[str, Any], sign: Union[str, None] = Header(default=None),
                         timestamp: Union[str, None] = Header(default=None)):
     logging.info(f"event = {event}, sign = {sign}, timestamp = {timestamp}")
@@ -36,6 +36,12 @@ async def dingtalk_hook(event: Dict[str, Any], sign: Union[str, None] = Header(d
         logging.error("dingtalk sign error")
         return False
     parse_event(event)
+    return True
+
+@app.post("/robot/dingtalk/notify")
+async def dingtalk_hook(event: Dict[str, Any], sign: Union[str, None] = Header(default=None),
+                        timestamp: Union[str, None] = Header(default=None)):
+    logging.info(f"event = {event}, sign = {sign}, timestamp = {timestamp}")
     return True
 
 
