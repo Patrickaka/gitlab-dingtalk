@@ -47,7 +47,6 @@ def init():
                 'service': service_value
             })
             if type_value not in cur_error_type:
-                error_type_file.write(type_value + '\n')
                 body_param = {
                     "alert_name": error_info_value,
                     "alert_type": type_value,
@@ -57,8 +56,10 @@ def init():
                 }
                 response = requests.post('https://connector.dingtalk.com/webhook/flow/102c243d34340b523850000v',
                                          json=body_param).json()
-                if response['data'] != 'true':
+                if not response['data']:
                     logger.error("Failed to push alert info to dingtalk, body_param = {}", json.dumps(body_param))
+                else:
+                    error_type_file.write(type_value + '\n')
         print(json.dumps(flames_error_log, indent=4, ensure_ascii=False))
 
 
