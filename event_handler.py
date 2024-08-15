@@ -79,5 +79,6 @@ if __name__ == '__main__':
     from common import init_log
     from error_log import parse_error_log
     parse_error_log.init()
-    main()
     init_log.init_log()
+    main()
+
