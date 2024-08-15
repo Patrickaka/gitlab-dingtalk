@@ -46,5 +46,21 @@ def push_dingding_text(content: str, open_conversation_id: str, robot_code: str)
     return True
 
 
+def push_dingding_markdown(title: str, text: str, open_conversation_id: str, robot_code: str):
+    headers = {'x-acs-dingtalk-access-token': get_access_token()}
+    body_param = {
+        "msgParam": json.dumps({
+            "title": title,
+            "text": text
+        }),
+        "msgKey": "sampleMarkdown",
+        "openConversationId": open_conversation_id,
+        "robotCode": robot_code
+    }
+    response = requests.post(push_url, json=body_param, headers=headers).json()
+    logger.info("push_dingding_text: body_param = {}, res = {}", json.dumps(body_param), json.dumps(response))
+    return True
+
+
 if __name__ == '__main__':
     push_dingding_text('hahaha', 'cid3Ecerb4D29JTp+iecXtA8w==', 'dingsbksjfhqhdlsq3pe')
