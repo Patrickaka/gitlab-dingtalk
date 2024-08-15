@@ -65,7 +65,7 @@ def main():
     options = define_options()
     global is_onl
     is_onl = options.is_onl
-    logger.info('is_onl: %s', is_onl)
+    logger.info('is_onl: {}', is_onl)
     if is_onl:
         credential = dingtalk_stream.Credential(dz_onl_appKey, dz_onl_secret)
     else:
