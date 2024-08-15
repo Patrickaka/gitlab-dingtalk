@@ -421,4 +421,8 @@ e_switch(
     e_set("type", "177", "error_info", "177百度小程序用户查询失败", "service", "cpsvideo-flames"),
     e_search('content:"抖音免费激励再得失败"'),
     e_set("type", "178", "error_info", "178抖音免费激励再得失败", "service", "cpsvideo-flames"),
+    e_search(
+        'content:"Server error" and content: "com.dz.flames.videostream.common.cpsconf.impl.FlamesParamServiceImpl.getCpsBookVideoPayConf"'
+    ),
+    e_set("type", "179", "error_info", "179获取书籍收费配置异常", "service", "cpsvideo-flames"),
 )

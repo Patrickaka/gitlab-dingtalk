@@ -1,6 +1,6 @@
 import json
 import os
-import re
+import regex as re
 
 import requests
 from loguru import logger
@@ -15,15 +15,11 @@ flames_error_suggest = {
 def extract_e_search_e_set_pairs(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
-
     matches = re.findall(r'e_switch\((.*)\)', content, re.DOTALL)
     content = matches[0]
-    e_search_matches = re.findall(r'e_search\((.*?)\)', content, re.DOTALL)
-    e_set_matches = re.findall(r'e_set\((.*?)\)', content, re.DOTALL)
-    if len(e_search_matches) != len(e_set_matches):
-        raise ValueError("Mismatched number of e_search and e_set calls")
-    pairs = {e_search: e_set for e_search, e_set in zip(e_search_matches, e_set_matches)}
-    return pairs
+    e_search_pattern = r'e_search\((.*?)\)\s*(.*?)(?=\se_search\(|\Z)'
+    e_search_matches = re.findall(e_search_pattern, content, re.DOTALL)
+    return e_search_matches
 
 
 def init():
@@ -35,7 +31,9 @@ def init():
         cur_error_type = error_type_file.read().split('\n')
     pairs = extract_e_search_e_set_pairs(file_path)
     with open(type_file_path, 'w', encoding='utf-8') as error_type_file:
-        for e_search, e_set in pairs.items():
+        for pair in pairs:
+            e_search = pair[0]
+            e_set = pair[1]
             type_match = re.search(r'"type",\s*"([^"]+)"', e_set)
             error_info_match = re.search(r'"error_info",\s*"([^"]+)"', e_set)
             service_match = re.search(r'"service",\s*"([^"]+)"', e_set)

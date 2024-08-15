@@ -3,3 +3,4 @@ requests
 aiohttp
 loguru
 dingtalk_stream
+regex
