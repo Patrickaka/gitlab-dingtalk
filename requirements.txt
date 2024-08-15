@@ -1,5 +1,5 @@
-websockets~=9.1
-requests~=2.27.0
-aiohttp~=3.8.6
-loguru~=0.7.2
+websockets
+requests
+aiohttp
+loguru
 dingtalk_stream
