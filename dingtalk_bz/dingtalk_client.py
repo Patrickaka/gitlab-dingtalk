@@ -5,7 +5,6 @@ import requests
 from loguru import logger
 
 from common.config import dz_test_appKey, dz_test_secret, dz_onl_appKey, dz_onl_secret
-from event_handler import is_onl
 
 token_url = 'https://api.dingtalk.com/v1.0/oauth2/accessToken'
 push_url = 'https://api.dingtalk.com/v1.0/robot/groupMessages/send'
@@ -14,7 +13,7 @@ access_token = ''
 expire_time = datetime.now()
 
 
-def get_access_token():
+def get_access_token(is_onl):
     global access_token, expire_time
     current_time = datetime.now()
     if access_token and current_time < expire_time:
@@ -31,8 +30,8 @@ def get_access_token():
         return access_token
 
 
-def push_dingding_text(content: str, open_conversation_id: str, robot_code: str):
-    headers = {'x-acs-dingtalk-access-token': get_access_token()}
+def push_dingding_text(content: str, open_conversation_id: str, robot_code: str, is_onl):
+    headers = {'x-acs-dingtalk-access-token': get_access_token(is_onl)}
     body_param = {
         "msgParam": json.dumps({
             "content": content
@@ -46,8 +45,8 @@ def push_dingding_text(content: str, open_conversation_id: str, robot_code: str)
     return True
 
 
-def push_dingding_markdown(title: str, text: str, open_conversation_id: str, robot_code: str):
-    headers = {'x-acs-dingtalk-access-token': get_access_token()}
+def push_dingding_markdown(title: str, text: str, open_conversation_id: str, robot_code: str, is_onl):
+    headers = {'x-acs-dingtalk-access-token': get_access_token(is_onl)}
     body_param = {
         "msgParam": json.dumps({
             "title": title,

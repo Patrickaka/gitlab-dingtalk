@@ -54,7 +54,7 @@ class MyCallbackHandler(dingtalk_stream.CallbackHandler):
     async def process(self, message: dingtalk_stream.CallbackMessage):
         if message.headers.topic == dingtalk_stream.ChatbotMessage.TOPIC:
             from parse import parser
-            parser.parse_event(message.data)
+            parser.parse_event(message.data, is_onl)
             return AckMessage.STATUS_OK, 'OK'
         print(message.headers.topic,
               message.data)

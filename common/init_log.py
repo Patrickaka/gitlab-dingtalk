@@ -7,7 +7,6 @@ from loguru import logger
 
 
 def init_log():
-    json.dumps = partial(json.dumps, ensure_ascii=False)
     # 移除默认的控制台输出
     logger.remove()
     log_format = (
