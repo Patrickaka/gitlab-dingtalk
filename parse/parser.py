@@ -14,22 +14,23 @@ def page_bind_response(open_conversation_id: str, robot_code: str, is_onl):
 
 
 def build_alert_text(alert_info):
-    return ("关键字:" + alert_info['key_word'] + "\n" +
-            "服务:" + alert_info['service'] + "\n" +
-            "建议:" + alert_info['suggest'])
+    return ("#### 关键字:" + alert_info['key_word'] + "\n" +
+            "#### 服务:" + alert_info['service'] + "\n" +
+            "#### 建议:" + alert_info['suggest'])
 
 
 def alert_query_response(alert_type, open_conversation_id: str, robot_code: str, is_onl):
     logger.info("success_response: open_conversation_id = {}, robot_code = {}", open_conversation_id, robot_code)
     alert_info = get_alert_info(alert_type)
-    # dingtalk_client.push_dingding_markdown(alert_info['title'], "# 一级标题\n## 二级标题", open_conversation_id, robot_code,
-    #                                        is_onl)
-    dingtalk_client.push_dingding_action_card(alert_info['title'],
-                                              build_alert_text(alert_info),
-                                              "查看全部报警",
-                                              "https://alidocs.dingtalk.com/i/nodes/7NkDwLng8ZKnmbyoI2M5d2qgWKMEvZBY?doc_type=wiki_notable&iframeQuery=sheetId%3DEb2uBae%26viewId%3DEBj8lcX&rnd=0.4209990224605611",
-                                              open_conversation_id,
-                                              robot_code, is_onl)
+    dingtalk_client.push_dingding_markdown(alert_info['title'],
+                                           build_alert_text(alert_info), open_conversation_id,
+                                           robot_code, is_onl)
+    # dingtalk_client.push_dingding_action_card(alert_info['title'],
+    #                                           build_alert_text(alert_info),
+    #                                           "查看全部报警",
+    #                                           "https://alidocs.dingtalk.com/i/nodes/7NkDwLng8ZKnmbyoI2M5d2qgWKMEvZBY?doc_type=wiki_notable&iframeQuery=sheetId%3DEb2uBae%26viewId%3DEBj8lcX&rnd=0.4209990224605611",
+    #                                           open_conversation_id,
+    #                                           robot_code, is_onl)
     return True
 
 

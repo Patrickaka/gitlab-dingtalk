@@ -1,7 +1,7 @@
 import json
 import os
-import regex as re
 
+import regex as re
 import requests
 from loguru import logger
 
@@ -12,9 +12,25 @@ flames_error_suggest = {
 }
 
 
+def init():
+    error_log_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..//error_log'))
+    flames_file_path = os.path.join(error_log_dir, 'flames_error_content.txt')
+    center_file_path = os.path.join(error_log_dir, 'center_error_content.txt')
+    error_suggest_path = os.path.join(error_log_dir, 'error_suggest.json')
+    with open(error_suggest_path, 'r', encoding='utf-8') as file:
+        error_suggest = json.load(file)
+    error_suggest = do_parse(flames_file_path, error_suggest, 1)
+    error_suggest = do_parse(center_file_path, error_suggest, 2)
+    with open(error_suggest_path, 'w') as file:
+        json.dump(error_suggest, file)
+
+
 def extract_e_search_e_set_pairs(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
+        lines = content.splitlines()
+        filtered_lines = [line for line in lines if not line.strip().startswith('#')]
+        content = '\n' + '\n'.join(filtered_lines)
     matches = re.findall(r'e_switch\((.*)\)', content, re.DOTALL)
     content = matches[0]
     e_search_pattern = r'e_search\((.*?)\)\s*(.*?)(?=\se_search\(|\Z)'
@@ -22,43 +38,41 @@ def extract_e_search_e_set_pairs(file_path):
     return e_search_matches
 
 
-def init():
-    global flames_error_log
-    error_log_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..//error_log'))
-    file_path = os.path.join(error_log_dir, 'error_content.txt')
-    type_file_path = os.path.join(error_log_dir, 'error_type.txt')
-    with open(type_file_path, 'r', encoding='utf-8') as error_type_file:
-        cur_error_type = error_type_file.read().split('\n')
+def do_parse(file_path, error_suggest, parse_type):
     pairs = extract_e_search_e_set_pairs(file_path)
-    with open(type_file_path, 'w', encoding='utf-8') as error_type_file:
-        for pair in pairs:
-            e_search = pair[0]
-            e_set = pair[1]
-            type_match = re.search(r'"type",\s*"([^"]+)"', e_set)
-            error_info_match = re.search(r'"error_info",\s*"([^"]+)"', e_set)
+    for pair in pairs:
+        e_search = pair[0]
+        e_set = pair[1]
+        type_match = re.search(r'"type",\s*"([^"]+)"', e_set)
+        error_info_match = re.search(r'"error_info",\s*"([^"]+)"', e_set)
+        if parse_type == 1:
             service_match = re.search(r'"service",\s*"([^"]+)"', e_set)
-            type_value = type_match.group(1) if type_match else None
-            error_info_value = error_info_match.group(1) if error_info_match else None
-            service_value = service_match.group(1) if service_match else None
-            flames_error_log[type_value] = (e_search.strip(), {
-                'error_info': error_info_value,
-                'service': service_value
-            })
-            if type_value not in cur_error_type:
-                body_param = {
-                    "alert_name": error_info_value,
-                    "alert_type": type_value,
-                    "alert_keyword": e_search.strip(),
-                    "alert_service": service_value,
-                    "alert_suggest": ""
-                }
-                response = requests.post('https://connector.dingtalk.com/webhook/flow/102c243d34340b523850000v',
-                                         json=body_param).json()
-                if not response['data']:
-                    logger.error("Failed to push alert info to dingtalk, body_param = {}", json.dumps(body_param))
-                else:
-                    error_type_file.write(type_value + '\n')
-        print(json.dumps(flames_error_log, indent=4, ensure_ascii=False))
+        else:
+            service_match = re.search(r'service:"([^"]+)"', e_search)
+        type_value = type_match.group(1) if type_match else None
+        error_info_value = error_info_match.group(1) if error_info_match else None
+        service_value = service_match.group(1) if service_match else None
+        flames_error_log[type_value] = (e_search.strip(), {
+            'error_info': error_info_value,
+            'service': service_value
+        })
+        if type_value not in error_suggest:
+            body_param = {
+                "alert_name": error_info_value,
+                "alert_type": type_value,
+                "alert_keyword": e_search.strip(),
+                "alert_service": service_value,
+                "alert_suggest": ""
+            }
+            response = requests.post('https://connector.dingtalk.com/webhook/flow/102c243d34340b523850000v',
+                                     json=body_param).json()
+            logger.info("Push alert info to dingtalk, body_param = {}, response = {}", json.dumps(body_param),
+                        json.dumps(response))
+            if not response['data']:
+                logger.error("Failed to push alert info to dingtalk, body_param = {}", json.dumps(body_param))
+            else:
+                error_suggest[type_value] = ''
+    return error_suggest
 
 
 def get_alert_info(alert_type):
@@ -74,4 +88,3 @@ def get_alert_info(alert_type):
 
 if __name__ == '__main__':
     init()
-    print(get_alert_info('166'))

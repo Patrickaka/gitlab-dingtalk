@@ -1,0 +1,302 @@
+# 1000未知错误，1001-1020注册，1021-1040消费，1041-1060书架，1061-1080center，1081-1100userdata，1101-1150前台，1151-1200后台，1201-1220job，1221-1240statistic, 1241-1300javaapp
+e_set("type", "1000", "error_info", "1000未知错误，及时归类")
+e_switch(
+    # 1041-1060书架
+    e_search('service:"flames-bookshelf" and content:"获取数据" and content:"异常,被抛弃"'),
+    e_set("type", "1041", "error_info", "1041获取数据异常，被抛弃"),
+    e_search('service:"flames-bookshelf" and content:"Data truncation: Data too long"'),
+    e_set("type", "1042", "error_info", "1042Data truncation: Data too long"),
+    # 1061-1080center
+    e_search('service:"flames-center" and content:"新增问题反馈失败"'),
+    e_set("type", "1061", "error_info", "1061新增问题反馈失败"),
+    e_search(
+        'service:"flames-center" and content:"is ignored, because it exists, maybe from xml file"'
+    ),
+    e_set("type", "1062", "error_info", "1062上线重启忽略"),
+    # 1081-1100userdata
+    e_search('service:"flames-userdata" and content:"虚拟支付退款失败"'),
+    e_set("type", "1081", "error_info", "1081虚拟支付退款失败"),
+    e_search('service:"flames-userdata" and content:"快手退款失败"'),
+    e_set("type", "1082", "error_info", "1082快手退款失败"),
+    e_search('service:"flames-userdata" and content:"四方支付,退款失败"'),
+    e_set("type", "1083", "error_info", "1083四方支付,退款失败"),
+    e_search(
+        'service:"flames-userdata" and content:"java.sql.SQLException: interrupt"'
+    ),
+    e_set("type", "1084", "error_info", "1084数据库连接中断"),
+    e_search('service:"flames-userdata" and content:"该笔交易已存在退款成功订单"'),
+    e_set("type", "1085", "error_info", "1085该笔交易已存在退款成功订单"),
+    e_search('service:"flames-userdata" and content:"抖音退款失败"'),
+    e_set("type", "1086", "error_info", "1086抖音退款失败"),
+    e_search('service:"flames-userdata" and content:"抖音通用支付退款成功"'),
+    e_set("type", "1087", "error_info", "1087抖音通用支付退款成功"),
+    e_search('service:"flames-userdata" and content:"抖音通用支付退款失败"'),
+    e_set("type", "1088", "error_info", "1088抖音通用支付退款失败"),
+    e_search('service:"flames-userdata" and content:"抖音通用支付退款接口超时"'),
+    e_set("type", "1089", "error_info", "1089抖音通用支付退款接口超时"),
+    e_search('service:"flames-userdata" and content:"Data too long for column"'),
+    e_set("type", "1090", "error_info", "1090数据库字段超长"),
+    # 1101-1150前台
+    e_search('service:"cpsvideo-app" and content:"订单退款状态未更新"'),
+    e_set("type", "1101", "error_info", "1101重复退款"),
+    e_search(
+        'service:"cpsvideo-app" and content:"Trying to get property" and content:"customer_service"'
+    ),
+    e_set("type", "1102", "error_info", "1102渠道未授权异常"),
+    e_search('service:"cpsvideo-app" and content:"mkdir(): File exists"'),
+    e_set("type", "1103", "error_info", "1103上线创建文件夹冲突"),
+    e_search('service:"cpsvideo-app" and content:"添加渠道订单统计"'),
+    e_set("type", "1104", "error_info", "1104唯一键冲突"),
+    e_search(
+        'service:"cpsvideo-app" and "Connection timed out" and content:"SQLSTATE"'
+    ),
+    e_set("type", "1105", "error_info", "1105db链接超时"),
+    e_search('service:"cpsvideo-app" and content:"MySQL server has gone away"'),
+    e_set("type", "1106", "error_info", "1106mysql链接失败"),
+    e_search('service:"cpsvideo-app" and content:"一个服务号只能绑定一个账号"'),
+    e_set("type", "1107", "error_info", "1107渠道重复授权"),
+    e_search('service:"cpsvideo-app" and content:"Type error: Argument 1 passed to"'),
+    e_set("type", "1108", "error_info", "1108渠道授权异常"),
+    e_search(
+        'service:"cpsvideo-app" and content:"No alive nodes found in your cluster"'
+    ),
+    e_set("type", "1109", "error_info", "1109ES数据同步异常"),
+    e_search(
+        'service:"cpsvideo-app" and content:"Cardinality violation" and content:"`referral`"'
+    ),
+    e_set("type", "1110", "error_info", "1110渠道投放链接错误"),
+    e_search(
+        'service:"cpsvideo-app" and content:"Duplicate entry" and content:"user_id"'
+    ),
+    e_set("type", "1111", "error_info", "1111延迟消息异常"),
+    e_search(
+        'service:"cpsvideo-app" and content:"Undefined index" and not "SendWeChatSource"'
+    ),
+    e_set("type", "1112", "error_info", "1112数组未定义索引"),
+    e_search('service:"cpsvideo-app" and content:"getaccesstokenerr"'),
+    e_set("type", "1113", "error_info", "1113getaccesstokenerr错误，请关注"),
+    e_search('service:"cpsvideo-app" and content:"当前授权公众号类型非服务号，请使用服务号进行扫码"'),
+    e_set("type", "1114", "error_info", "1114当前授权公众号类型非服务号"),
+    e_search('service:"cpsvideo-app" and content:"签名错误"'),
+    e_set("type", "1115", "error_info", "1115签名错误"),
+    e_search('service:"cpsvideo-app" and content:"添加管理员订单统计"'),
+    e_set("type", "1116", "error_info", "1116添加管理员订单统计主键冲突"),
+    e_search('service:"cpsvideo-app" and content:"SendWeChatSource Fail"'),
+    e_set("type", "1117", "error_info", "1117腾讯接口数据上报异常"),
+    e_search('service:"cpsvideo-app" and content:"Wechat Authorization Platform_id"'),
+    e_set("type", "1118", "error_info", "1118账号授权异常"),
+    e_search('service:"cpsvideo-app" and content:"access_token fail"'),
+    e_set("type", "1119", "error_info", "1119获取渠道token错误"),
+    e_search(
+        'service:"cpsvideo-app" and content:"getToken" and content:"mpgdtcallbackConfig"'
+    ),
+    e_set("type", "1120", "error_info", "1120投放获取渠道token异常"),
+    e_search(
+        'service:"cpsvideo-app" and content:"saveOrderInfo" and content:"并发回调，丢弃"'
+    ),
+    e_set("type", "1121", "error_info", "1121订单完成重复回调"),
+    e_search(
+        'service:"cpsvideo-app" and content:"userpicdelay" and content:"channel_id"'
+    ),
+    e_set("type", "1122", "error_info", "1122关注延迟获取用户失败"),
+    e_search('service:"cpsvideo-app" and content:"授权时，更新微信菜单失败2"'),
+    e_set("type", "1123", "error_info", "1123授权时，更新微信菜单失败"),
+    e_search('service:"cpsvideo-app" and content:"达人信息错误"'),
+    e_set("type", "1124", "error_info", "1124达人信息错误"),
+    e_search('service:"cpsvideo-app" and content:"Undefined offset"'),
+    e_set("type", "1125", "error_info", "1125数组下标未定义"),
+    e_search(
+        'service:"cpsvideo-app" and content:"Operation timed out after" and content:"sendysmessage"'
+    ),
+    e_set("type", "1126", "error_info", "1126客服消息发送超时失败"),
+    e_search('service:"cpsvideo-app" and content:"图片素材处理失败：errormsg"'),
+    e_set("type", "1127", "error_info", "1127公众号消息图片素材处理失败"),
+    e_search('service:"cpsvideo-app" and content:"云账户大额提现提醒"'),
+    e_set("type", "1128", "error_info", "1128云账户大额提现提醒"),
+    e_search('service:"cpsvideo-app" and content:"云账号打款回调失败"'),
+    e_set("type", "1129", "error_info", "1129云账号打款回调失败"),
+    e_search('service:"cpsvideo-app" and content:"Redis Connect Error"'),
+    e_set("type", "1130", "error_info", "1130redis连接异常"),
+    e_search(
+        'service:"cpsvideo-app" and content:"Invalid argument supplied" and content:"templateid"'
+    ),
+    e_set("type", "1131", "error_info", "1131小程序未同步模板，请及时操作"),
+    e_search(
+        'service:"cpsvideo-app" and content:"Column \'channel_benefit\' cannot be null"'
+    ),
+    e_set("type", "1132", "error_info", "1132订单渠道分成比例为null"),
+    e_search('service:"cpsvideo-app" and content:"Operation timed out after"'),
+    e_set("type", "1133", "error_info", "1133三方服务调用超时"),
+    e_search(
+        'service:"cpsvideo-app" and content:"channelCallback" and content:"find_in_set"'
+    ),
+    e_set("type", "1134", "error_info", "1134渠道自定义回传配置参数错误"),
+    e_search(
+        'service:"cpsvideo-app" and content:"Connection timed out" and content:”Redis“'
+    ),
+    e_set("type", "1135", "error_info", "1135redis链接超时"),
+    e_search('service:"cpsvideo-app" and content:"该达人已经绑定团长"'),
+    e_set("type", "1136", "error_info", "1136重复绑定团长"),
+    e_search(
+        'service:"cpsvideo-app" and content:"media file count is out of limit hint"'
+    ),
+    e_set("type", "1137", "error_info", "1137微信素材到达上限"),
+    e_search('service:"cpsvideo-app" and content:"不能邀请自己"'),
+    e_set("type", "1138", "error_info", "1138达人添加异常邀请码"),
+    e_search(
+        'service:"cpsvideo-app" and content:"Workwechat/getBindAppid" and content:"Unknown column"'
+    ),
+    e_set("type", "1139", "error_info", "1139企微获取渠道信息，参数异常"),
+    e_search('service:"cpsvideo-app" and content:"小程序使用异常"'),
+    e_set("type", "1140", "error_info", "1140下单小程序与渠道小程序不一致"),
+    e_search(
+        'service:"cpsvideo-app" and content:"Failed connect to api.weixin.qq.com"'
+    ),
+    e_set("type", "1141", "error_info", "1141请求微信接口失败"),
+    # 1151-1200后台
+    e_search('service:"cpsvideo-admin" and content:"mkdir(): File exists"'),
+    e_set("type", "1151", "error_info", "1151上线创建文件夹冲突"),
+    e_search('service:"cpsvideo-admin" and content:"MySQL server has gone away"'),
+    e_set("type", "1152", "error_info", "1152mysql链接失败"),
+    e_search('service:"cpsvideo-admin" and content:"Directory not empty"'),
+    e_set("type", "1153", "error_info", "1153后台更新本地缓存"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"preg_replace" and content:"unknown property name after"'
+    ),
+    e_set("type", "1154", "error_info", "1154异常访问"),
+    e_search('service:"cpsvideo-admin" and content:"Undefined index"'),
+    e_set("type", "1155", "error_info", "1155数组未定义索引"),
+    e_search('service:"cpsvideo-admin" and content:"Unknown column"'),
+    e_set("type", "1156", "error_info", "1156通用搜索异常"),
+    e_search('service:"cpsvideo-admin" and content:"CreateAdSourceId Fail"'),
+    e_set("type", "1157", "error_info", "1157渠道广告账号授权异常"),
+    e_search('service:"cpsvideo-admin" and content:"Fatal error"'),
+    e_set("type", "1158", "error_info", "1158系统错误，请及时查看"),
+    e_search('service:"cpsvideo-admin" and content:"template not exists"'),
+    e_set("type", "1159", "error_info", "1159模板不存在"),
+    e_search('service:"cpsvideo-admin" and content:"未定义数组下标"'),
+    e_set("type", "1160", "error_info", "1160未定义数组下标"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"Creating default object from empty value"'
+    ),
+    e_set("type", "1161", "error_info", "1161对象调用错误"),
+    e_search('service:"cpsvideo-admin" and content:"模板类目不存在，请先更新类目"'),
+    e_set("type", "1162", "error_info", "1162小程序获取模板失败"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"Invalid argument supplied for foreach"'
+    ),
+    e_set("type", "1163", "error_info", "1163数据解析失败"),
+    e_search('service:"cpsvideo-admin" and content:"获取商户余额数据错误"'),
+    e_set("type", "1164", "error_info", "1164获取抖音账单失败"),
+    e_search('service:"cpsvideo-admin" and content:"Integrity constraint violation"'),
+    e_set("type", "1165", "error_info", "1165条件检索异常"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"Compilation failed: unmatched parentheses"'
+    ),
+    e_set("type", "1166", "error_info", "1166异常请求(刷的)"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"SQLSTATE[HY000] [2002] Connection timed out"'
+    ),
+    e_set("type", "1167", "error_info", "1167mysql链接异常"),
+    e_search('service:"cpsvideo-admin" and content:"Allowed memory size of"'),
+    e_set("type", "1168", "error_info", "1168内存溢出，请及时关注"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"current version [2] is different than the one provided"'
+    ),
+    e_set("type", "1169", "error_info", "1169es操作异常"),
+    e_search('service:"cpsvideo-admin" and content:"渠道互动模式上传小程序资链接图片失败"'),
+    e_set("type", "1170", "error_info", "1170渠道互动模式上传小程序资链接图片失败"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"failed to create query" and content:"cpsvideo_referral"'
+    ),
+    e_set("type", "1171", "error_info", "1171推广链接检索es条件异常"),
+    e_search('service:"cpsvideo-admin" and content:"multipaymoney"'),
+    e_set("type", "1172", "error_info", "1172multipaymoney异常"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"admin/custom/sent" and content:"方法参数错误"'
+    ),
+    e_set("type", "1173", "error_info", "1173忽略"),
+    e_search('service:"cpsvideo-admin" and content:"TCP connection reset by peer"'),
+    e_set("type", "1174", "error_info", "1174网络链接异常"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"autologin" and content:"Trying to get property"'
+    ),
+    e_set("type", "1175", "error_info", "1175渠道切换账号异常"),
+    e_search('service:"cpsvideo-admin" and content:"Operation timed out after"'),
+    e_set("type", "1176", "error_info", "1176三方服务调用超时"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"云账户银行卡提现失败" or content:"云账户支付宝提现失败"'
+    ),
+    e_set("type", "1177", "error_info", "1177云账户提现失败"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"admin/bind/multiformat" and content:"iconv" and content:"Detected an illegal character in input string"'
+    ),
+    e_set("type", "1178", "error_info", "1178vip绑定账号异常"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"Maximum execution time of 30 seconds exceeded"'
+    ),
+    e_set("type", "1179", "error_info", "1179php执行时间超时"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"Trying to get property" and content: "group_id" and content:"of non-object"'
+    ),
+    e_set("type", "1180", "error_info", "1180未获取到登陆信息"),
+    e_search('service:"cpsvideo-admin" and content:"团长没有绑定渠道"'),
+    e_set("type", "1181", "error_info", "1181团长没有绑定渠道"),
+    e_search('service:"cpsvideo-admin" and content:"高级群发测试发送失败：system"'),
+    e_set("type", "1182", "error_info", "1182高级群发测试发送失败"),
+    e_search('service:"cpsvideo-admin" and content:"高级群发测试发送失败：api unauthorized"'),
+    e_set("type", "1183", "error_info", "1183高级群发测试发送失败-未授权"),
+    e_search('service:"cpsvideo-admin" and content:"static.cps43.dzods.cn"'),
+    e_set("type", "1184", "error_info", "1184业务功能已下线"),
+    e_search('service:"cpsvideo-admin" and content:"渠道接口创建新短链失败"'),
+    e_set("type", "1185", "error_info", "1185渠道接口创建新短链失败"),
+    e_search(
+        'service:"cpsvideo-admin" and content:"A non well formed numeric value encountered"'
+    ),
+    e_set("type", "1186", "error_info", "1186参数类型错误"),
+    #  1201-1220job
+    e_search('service:"cpsvideo-job" and content:"账号未授权"'),
+    e_set("type", "1201", "error_info", "1201账号未授权"),
+    e_search('service:"cpsvideo-job" and content:"账号被封"'),
+    e_set("type", "1202", "error_info", "1202账号被封"),
+    e_search('service:"cpsvideo-job" and content:"获取accessToken失败"'),
+    e_set("type", "1203", "error_info", "1203获取accessToken失败"),
+    e_search('service:"cpsvideo-job" and content:"客服消息发送数据异常，任务类型："'),
+    e_set("type", "1204", "error_info", "1204客服消息发送数据异常"),
+    e_search('service:"cpsvideo-job" and content:"channelId不能为空"'),
+    e_set("type", "1205", "error_info", "1205公众号用户关注延迟消息异常"),
+    e_search('service:"cpsvideo-job" and content:"抓取实时ecpm数据失败-接口超时"'),
+    e_set("type", "1206", "error_info", "1206抓取实时ecpm数据失败-接口超时"),
+    e_search('service:"cpsvideo-job" and content:"抓取实时ecpm数据失败"'),
+    e_set("type", "1207", "error_info", "1207抓取实时ecpm数据失败"),
+    e_search('service:"cpsvideo-job" and content:"抓取实时ecpm数据无数据"'),
+    e_set("type", "1208", "error_info", "1208抓取实时ecpm数据无数据"),
+    e_search('service:"cpsvideo-job" and content:"客服延时消息-新用户关注事件参数缺失"'),
+    e_set("type", "1209", "error_info", "1209客服延时消息-新用户关注事件参数缺失"),
+    e_search('service:"cpsvideo-job" and content:"1用户sendUsersAddTag失败,请注意异常信息"'),
+    e_set("type", "1210", "error_info", "1210用户sendUsersAddTag失败,请注意异常信息"),
+    # 1221-1240statistic
+    e_search('service:"cpsvideo-statistic" and content:"Duplicate entry"'),
+    e_set("type", "1221", "error_info", "1221主键冲突"),
+    e_search(
+        'service:"cpsvideo-statistic" and content:"NoSuchCommandException:beans.json"'
+    ),
+    e_set("type", "1222", "error_info", "1222阿里扫的"),
+    e_search('service:"cpsvideo-statistic" and content:"单条消息校验未通过-放弃执行"'),
+    e_set("type", "1223", "error_info", "1223单条消息校验未通过-放弃执行"),
+    e_search('service:"cpsvideo-statistic" and content:"单条消息处理失败"'),
+    e_set("type", "1224", "error_info", "1224单条消息处理失败"),
+    e_search('service:"cpsvideo-statistic" and content:"缓存存储记录条数超过2000"'),
+    e_set("type", "1225", "error_info", "1225缓存存储记录条数超过2000"),
+    # 1241-1300javaapp
+    e_search('service:"cpsvideo-javaapp" and content:"params参数不合法，此页面已被其他剧集绑定"'),
+    e_set("type", "1241", "error_info", "1241抖音书籍授权异常"),
+    e_search('service:"cpsvideo-javaapp" and content:"页面绑定失败"'),
+    e_set("type", "1242", "error_info", "1242抖音书籍绑定失败"),
+    e_search(
+        'service:"cpsvideo-javaapp" and (content:"getVideoChannelSubInfo" or content:"调用出现异常，已自动转为错误码")'
+    ),
+    e_set("type", "1243", "error_info", "1243获取强制关注状态"),
+    e_search('service:"cpsvideo-javaapp" and content:"uk_app_book_chapter"'),
+    e_set("type", "1244", "error_info", "1244页面重新授权"),
+)
