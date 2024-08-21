@@ -28,7 +28,7 @@ help_card_data = {
         },
         {
             "type": "markdown",
-            "text": "*使用方法* : #报警查询 {报警type} or #1 {报警type}\n*eg* : #报警查询 1 or #1 1",
+            "text": "**使用方法** : #报警查询 {报警type} or #1 {报警type}\n**eg** : #报警查询 1 or #1 1",
             "id": "markdown_1724151997549"
         },
         {
