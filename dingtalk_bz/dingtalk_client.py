@@ -106,17 +106,17 @@ def push_dingding_alert_interactive_card(title: str, keyword: str, service: str,
             },
             {
                 "type": "markdown",
-                "text": "**报警关键字**:" + keyword,
+                "text": "**报警关键字**: " + keyword.strip('\'').replace('\"', '\''),
                 "id": "markdown_1724120468121"
             },
             {
                 "type": "markdown",
-                "text": "**服务名称**:" + service,
+                "text": "**服务名称**: " + service,
                 "id": "markdown_1724120468134"
             },
             {
                 "type": "markdown",
-                "text": "**处理建议**:" + suggest,
+                "text": "**处理建议**: " + suggest,
                 "id": "markdown_1724120468134"
             },
             {
@@ -169,6 +169,6 @@ def push_dingding_interactive_card(card_data, open_conversation_id: str, robot_c
 
 if __name__ == '__main__':
     # push_dingding_markdown('hahaha', text, 'cid3Ecerb4D29JTp+iecXtA8w==', 'dingsbksjfhqhdlsq3pe', False)
-    push_dingding_alert_interactive_card('报警', "1", "1", "1", 'cid3Ecerb4D29JTp+iecXtA8w==', 'dingsbksjfhqhdlsq3pe',
+    push_dingding_alert_interactive_card('报警', "content: \'dada\'", "1", "1", 'cid3Ecerb4D29JTp+iecXtA8w==', 'dingsbksjfhqhdlsq3pe',
                                          1,
                                          False)

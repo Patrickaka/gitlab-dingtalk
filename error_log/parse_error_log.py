@@ -1,6 +1,7 @@
 import json
 import os
 
+import pandas as pd
 import regex as re
 import requests
 from loguru import logger
@@ -17,10 +18,17 @@ def init():
     flames_file_path = os.path.join(error_log_dir, 'flames_error_content.txt')
     center_file_path = os.path.join(error_log_dir, 'center_error_content.txt')
     error_suggest_path = os.path.join(error_log_dir, 'error_suggest.json')
+    ding_talk_excel_path = os.path.join(error_log_dir, 'flames报警.xlsx')
     with open(error_suggest_path, 'r', encoding='utf-8') as file:
         error_suggest = json.load(file)
     error_suggest = do_parse(flames_file_path, error_suggest, 1)
     error_suggest = do_parse(center_file_path, error_suggest, 2)
+    df = pd.read_excel(ding_talk_excel_path)
+    df = df.applymap(lambda x: None if pd.isna(x) else x)
+    suggest_dict = dict(zip(df['报警类型'], df['处理建议']))
+    for key, value in error_suggest.items():
+        if suggest_dict.get(key):
+            error_suggest[key] = suggest_dict.get(key)
     with open(error_suggest_path, 'w') as file:
         json.dump(error_suggest, file)
 

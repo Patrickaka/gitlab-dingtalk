@@ -4,3 +4,5 @@ aiohttp
 loguru
 dingtalk_stream
 regex
+pandas
+openpyxl
