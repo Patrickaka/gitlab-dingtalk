@@ -15,8 +15,8 @@ expire_time = datetime.now()
 
 
 def get_access_token(is_onl):
-    if not is_onl:
-        return '5222eb8bdec430688b196112fa600d60'
+    # if not is_onl:
+    #     return '5222eb8bdec430688b196112fa600d60'
     global access_token, expire_time
     current_time = datetime.now()
     if access_token and current_time < expire_time:

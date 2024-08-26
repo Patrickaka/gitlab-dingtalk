@@ -50,7 +50,7 @@ def parse_event(event: Dict[str, Any], is_onl):
         # todo 调用接口
         page_bind_response(open_conversation_id, robot_code, is_onl)
     if instruction == "#报警查询" or instruction == "#1":
-        alert_type = content_arr[1]
+        alert_type = content_arr[1].lstrip('0')
         alert_query_response(alert_type, open_conversation_id, robot_code, conversation_type, is_onl)
     elif instruction == "#help":
         help_response(open_conversation_id, robot_code, conversation_type, is_onl)

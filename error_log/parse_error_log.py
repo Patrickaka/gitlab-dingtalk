@@ -60,7 +60,7 @@ def do_parse(file_path, error_suggest, parse_type):
         type_value = type_match.group(1) if type_match else None
         error_info_value = error_info_match.group(1) if error_info_match else None
         service_value = service_match.group(1) if service_match else None
-        flames_error_log[type_value] = (e_search.strip(), {
+        flames_error_log[type_value.lstrip('0')] = (e_search.strip(), {
             'error_info': error_info_value,
             'service': service_value
         })
