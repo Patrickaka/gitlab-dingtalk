@@ -17,10 +17,13 @@ def page_bind_response(open_conversation_id: str, robot_code: str, is_onl):
 def alert_query_response(alert_type, open_conversation_id: str, robot_code: str, conversation_type, is_onl):
     logger.info("success_response: open_conversation_id = {}, robot_code = {}", open_conversation_id, robot_code)
     alert_info = get_alert_info(alert_type)
-    dingtalk_client.push_dingding_alert_interactive_card(alert_info['title'], alert_info['key_word'],
-                                                         alert_info['service'],
-                                                         alert_info['suggest'], open_conversation_id,
-                                                         robot_code, conversation_type, is_onl)
+    if not alert_info.get('title', None):
+        dingtalk_client.push_dingding_text('查询不到该报警类型', open_conversation_id, robot_code, is_onl)
+    else:
+        dingtalk_client.push_dingding_alert_interactive_card(alert_info['title'], alert_info['key_word'],
+                                                             alert_info['service'],
+                                                             alert_info['suggest'], open_conversation_id,
+                                                             robot_code, conversation_type, is_onl)
     return True
 
 
@@ -45,6 +48,9 @@ def parse_event(event: Dict[str, Any], is_onl):
     content_arr = content.split(" ")
     instruction = content_arr[0]
     if not instruction.startswith('#'):
+        if instruction.isdigit():
+            alert_type = instruction.lstrip('0')
+            return alert_query_response(alert_type, open_conversation_id, robot_code, conversation_type, is_onl)
         error_response(open_conversation_id, robot_code, is_onl)
     if instruction == "#页面绑定" or instruction == "#2":
         # todo 调用接口
