@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 
 import argparse
+from contextlib import asynccontextmanager
 from datetime import time
 
 import dingtalk_stream
+import uvicorn
 from dingtalk_stream import AckMessage
+from fastapi import FastAPI
 from loguru import logger
 
 from common.config import dz_test_appKey, dz_test_secret, dz_onl_appKey, dz_onl_secret
+from common.deploy_req import DeployRequest
 
 is_onl = False
 
@@ -60,7 +64,8 @@ class MyCallbackHandler(dingtalk_stream.CallbackHandler):
         return AckMessage.STATUS_OK, 'OK'
 
 
-def main():
+@asynccontextmanager
+async def lifespan():
     options = define_options()
     global is_onl
     is_onl = options.is_onl
@@ -75,10 +80,23 @@ def main():
     client.start_forever()
 
 
+app = FastAPI(lifespzan=lifespan)
+
+
+def main():
+    uvicorn.run(app, host="0.0.0.0", port=9998)
+
+
+@app.post("/jenkins/deploy")
+def sync_mini_program_api(req: DeployRequest):
+    logger.info("jenkins推送: req = {}", req.model_dump_json())
+    return 'ok'
+
+
 if __name__ == '__main__':
     from common import init_log
     from error_log import parse_error_log
+
     parse_error_log.init()
     init_log.init_log()
     main()
-

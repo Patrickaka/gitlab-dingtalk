@@ -1,8 +1,12 @@
 websockets
-requests
+requests~=2.31.0
 aiohttp
-loguru
+loguru~=0.7.2
 dingtalk_stream
-regex
-pandas
+regex~=2024.7.24
+pandas~=2.2.2
 openpyxl
+fastapi~=0.97.0
+uvicorn~=0.22.0
+urllib3
+pydantic~=2.7.1
